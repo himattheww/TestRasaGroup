@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { TextField, Button, Box, Paper } from '@mui/material';
+import { TextField, Button, Box } from '@mui/material';
 
-const TransactionForm = () => {
+const TransactionForm = ({ addTransaction }) => {
   const [transaction, setTransaction] = useState({
-    bookId: '',
-    studentId: '',
-    borrowDate: '',
-    returnDate: '',
+    bookid: '',
+    studentid: '',
+    borrowdate: '',
+    returndate: '',
   });
 
   const handleChange = (e) => {
@@ -19,57 +19,52 @@ const TransactionForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Kirim data ke backend
+    addTransaction(transaction);
+    setTransaction({ bookid: '', studentid: '', borrowdate: '', returndate: '' });
   };
 
   return (
-    <Paper sx={{ p: 3, mb: 4 }}>
-      <Box component="form" onSubmit={handleSubmit}>
-        <TextField
-          label="Book ID"
-          name="bookId"
-          value={transaction.bookId}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Student ID"
-          name="studentId"
-          value={transaction.studentId}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Borrow Date"
-          name="borrowDate"
-          value={transaction.borrowDate}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          type="date"
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-        <TextField
-          label="Return Date"
-          name="returnDate"
-          value={transaction.returnDate}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          type="date"
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-        <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-          Submit
-        </Button>
-      </Box>
-    </Paper>
+    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+      <TextField
+        label="Book ID"
+        name="bookid"
+        value={transaction.bookid}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Student ID"
+        name="studentid"
+        value={transaction.studentid}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Borrow Date"
+        name="borrowdate"
+        value={transaction.borrowdate}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+        type="date"
+        InputLabelProps={{ shrink: true }}
+      />
+      <TextField
+        label="Return Date"
+        name="returndate"
+        value={transaction.returndate}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+        type="date"
+        InputLabelProps={{ shrink: true }}
+      />
+      <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+        Submit
+      </Button>
+    </Box>
   );
 };
 

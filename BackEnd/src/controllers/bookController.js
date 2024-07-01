@@ -1,33 +1,33 @@
-const { sql, poolPromise } = require('../config/dbconfig');
+// src/controllers/bookController.js
+const pool = require('../config/db');
 
-// Mendapatkan semua buku
-const getBooks = async (req, res) => {
-    try {
-        const pool = await poolPromise;
-        const result = await pool.request().query('SELECT * FROM Books');
-        res.json(result.recordset);
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
+// Get all books
+const getAllBooks = async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM masterbuku');
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
-// Menambahkan buku baru
-const addBook = async (req, res) => {
-    try {
-        const { title, author, stock } = req.body;
-        const pool = await poolPromise;
-        const result = await pool.request()
-            .input('Title', sql.NVarChar, title)
-            .input('Author', sql.NVarChar, author)
-            .input('Stock', sql.Int, stock)
-            .query('INSERT INTO Books (Title, Author, Stock) VALUES (@Title, @Author, @Stock)');
-        res.status(201).send('Book added successfully');
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
+// Create a new book
+const createBook = async (req, res) => {
+  const { title, author, stock } = req.body;
+  try {
+    const result = await pool.query(
+      'INSERT INTO masterbuku (title, author, stock) VALUES ($1, $2, $3) RETURNING *',
+      [title, author, stock]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
 module.exports = {
-    getBooks,
-    addBook
+  getAllBooks,
+  createBook,
 };

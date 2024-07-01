@@ -1,33 +1,33 @@
-const { sql, poolPromise } = require('../config/dbconfig');
+// src/controllers/stockController.js
+const pool = require('../config/db');
 
-// Mendapatkan semua stok buku
-const getStocks = async (req, res) => {
-    try {
-        const pool = await poolPromise;
-        const result = await pool.request().query('SELECT * FROM Stocks');
-        res.json(result.recordset);
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
+// Get all stock items
+const getAllStock = async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM rakinventory');
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
-// Menambahkan stok buku baru
-const addStock = async (req, res) => {
-    try {
-        const { bookId, location, quantity } = req.body;
-        const pool = await poolPromise;
-        const result = await pool.request()
-            .input('BookId', sql.Int, bookId)
-            .input('Location', sql.NVarChar, location)
-            .input('Quantity', sql.Int, quantity)
-            .query('INSERT INTO Stocks (BookId, Location, Quantity) VALUES (@BookId, @Location, @Quantity)');
-        res.status(201).send('Stock added successfully');
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
+// Create a new stock item
+const createStockItem = async (req, res) => {
+  const { bookid, location, quantity } = req.body;
+  try {
+    const result = await pool.query(
+      'INSERT INTO rakinventory (bookid, location, quantity) VALUES ($1, $2, $3) RETURNING *',
+      [bookid, location, quantity]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
 module.exports = {
-    getStocks,
-    addStock
+  getAllStock,
+  createStockItem,
 };

@@ -1,8 +1,9 @@
+// src/routes/historyRoutes.js
 const express = require('express');
+const { getAllHistory, createHistoryItem } = require('../controllers/historyController');
 const router = express.Router();
-const { getHistories, addHistory } = require('../controllers/historyController');
 
-router.get('/', getHistories);
-router.post('/', addHistory);
+router.get('/', getAllHistory);
+router.post('/', createHistoryItem);
 
 module.exports = router;

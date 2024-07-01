@@ -1,34 +1,33 @@
-const { sql, poolPromise } = require('../config/dbconfig');
+// src/controllers/historyController.js
+const pool = require('../config/db');
 
-// Mendapatkan semua riwayat peminjaman
-const getHistories = async (req, res) => {
-    try {
-        const pool = await poolPromise;
-        const result = await pool.request().query('SELECT * FROM Histories');
-        res.json(result.recordset);
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
+// Get all history items
+const getAllHistory = async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM historypeminjaman');
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
-// Menambahkan riwayat peminjaman baru
-const addHistory = async (req, res) => {
-    try {
-        const { bookId, studentId, borrowDate, returnDate } = req.body;
-        const pool = await poolPromise;
-        const result = await pool.request()
-            .input('BookId', sql.Int, bookId)
-            .input('StudentId', sql.Int, studentId)
-            .input('BorrowDate', sql.Date, borrowDate)
-            .input('ReturnDate', sql.Date, returnDate)
-            .query('INSERT INTO Histories (BookId, StudentId, BorrowDate, ReturnDate) VALUES (@BookId, @StudentId, @BorrowDate, @ReturnDate)');
-        res.status(201).send('History added successfully');
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
+// Create a new history item
+const createHistoryItem = async (req, res) => {
+  const { bookid, studentid, borrowdate, returndate } = req.body;
+  try {
+    const result = await pool.query(
+      'INSERT INTO historypeminjaman (bookid, studentid, borrowdate, returndate) VALUES ($1, $2, $3, $4) RETURNING *',
+      [bookid, studentid, borrowdate, returndate]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
 module.exports = {
-    getHistories,
-    addHistory
+  getAllHistory,
+  createHistoryItem,
 };

@@ -1,34 +1,33 @@
-const { sql, poolPromise } = require('../config/dbconfig');
+// src/controllers/transactionController.js
+const pool = require('../config/db');
 
-// Mendapatkan semua transaksi
-const getTransactions = async (req, res) => {
-    try {
-        const pool = await poolPromise;
-        const result = await pool.request().query('SELECT * FROM Transactions');
-        res.json(result.recordset);
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
+// Get all transactions
+const getAllTransactions = async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM transaksipeminjaman');
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
-// Menambahkan transaksi peminjaman baru
-const addTransaction = async (req, res) => {
-    try {
-        const { bookId, studentId, borrowDate, returnDate } = req.body;
-        const pool = await poolPromise;
-        const result = await pool.request()
-            .input('BookId', sql.Int, bookId)
-            .input('StudentId', sql.Int, studentId)
-            .input('BorrowDate', sql.Date, borrowDate)
-            .input('ReturnDate', sql.Date, returnDate)
-            .query('INSERT INTO Transactions (BookId, StudentId, BorrowDate, ReturnDate) VALUES (@BookId, @StudentId, @BorrowDate, @ReturnDate)');
-        res.status(201).send('Transaction added successfully');
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
+// Create a new transaction
+const createTransaction = async (req, res) => {
+  const { bookid, studentid, borrowdate, returndate } = req.body;
+  try {
+    const result = await pool.query(
+      'INSERT INTO transaksipeminjaman (bookid, studentid, borrowdate, returndate) VALUES ($1, $2, $3, $4) RETURNING *',
+      [bookid, studentid, borrowdate, returndate]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
 module.exports = {
-    getTransactions,
-    addTransaction
+  getAllTransactions,
+  createTransaction,
 };

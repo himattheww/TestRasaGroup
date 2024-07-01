@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { TextField, Button, Box, Paper } from '@mui/material';
+import { TextField, Button, Box } from '@mui/material';
 
-const StudentForm = () => {
+const StudentForm = ({ addStudent }) => {
   const [student, setStudent] = useState({
     name: '',
     email: '',
@@ -17,33 +17,32 @@ const StudentForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Kirim data ke backend
+    addStudent(student);
+    setStudent({ name: '', email: '' });
   };
 
   return (
-    <Paper sx={{ p: 3, mb: 4 }}>
-      <Box component="form" onSubmit={handleSubmit}>
-        <TextField
-          label="Name"
-          name="name"
-          value={student.name}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Email"
-          name="email"
-          value={student.email}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
-        <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-          Submit
-        </Button>
-      </Box>
-    </Paper>
+    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+      <TextField
+        label="Name"
+        name="name"
+        value={student.name}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Email"
+        name="email"
+        value={student.email}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+      />
+      <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+        Submit
+      </Button>
+    </Box>
   );
 };
 

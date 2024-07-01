@@ -1,40 +1,37 @@
-import React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import React from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
+import moment from "moment";
 
-const HistoryTable = () => {
-  const histories = [
-    { id: 1, bookId: '1', studentId: '1', borrowDate: '2023-01-01', returnDate: '2023-01-15' },
-    { id: 2, bookId: '2', studentId: '2', borrowDate: '2023-02-01', returnDate: '2023-02-15' },
-  ];
-
+const HistoryTable = ({ history }) => {
   return (
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Book ID</TableCell>
-            <TableCell>Student ID</TableCell>
-            <TableCell>Borrow Date</TableCell>
-            <TableCell>Return Date</TableCell>
-            <TableCell>Actions</TableCell>
+            <TableCell>BookID</TableCell>
+            <TableCell>StudentID</TableCell>
+            <TableCell>BorrowDate</TableCell>
+            <TableCell>ReturnDate</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {histories.map((history) => (
-            <TableRow key={history.id}>
-              <TableCell>{history.bookId}</TableCell>
-              <TableCell>{history.studentId}</TableCell>
-              <TableCell>{history.borrowDate}</TableCell>
-              <TableCell>{history.returnDate}</TableCell>
+          {history.map((entry) => (
+            <TableRow key={entry.historyid}>
+              <TableCell>{entry.bookid}</TableCell>
+              <TableCell>{entry.studentid}</TableCell>
               <TableCell>
-                <IconButton color="primary">
-                  <EditIcon />
-                </IconButton>
-                <IconButton color="secondary">
-                  <DeleteIcon />
-                </IconButton>
+                {moment(entry.borrowdate).format("YYYY-MM-DD")}
+              </TableCell>
+              <TableCell>
+                {moment(entry.returndate).format("YYYY-MM-DD")}
               </TableCell>
             </TableRow>
           ))}

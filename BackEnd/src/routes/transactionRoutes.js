@@ -1,8 +1,9 @@
+// src/routes/transactionRoutes.js
 const express = require('express');
+const { getAllTransactions, createTransaction } = require('../controllers/transactionController');
 const router = express.Router();
-const { getTransactions, addTransaction } = require('../controllers/transactionController');
 
-router.get('/', getTransactions);
-router.post('/', addTransaction);
+router.get('/', getAllTransactions);
+router.post('/', createTransaction);
 
 module.exports = router;

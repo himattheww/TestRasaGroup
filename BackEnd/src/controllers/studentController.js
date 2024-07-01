@@ -1,32 +1,33 @@
-const { sql, poolPromise } = require('../config/dbconfig');
+// src/controllers/studentController.js
+const pool = require('../config/db');
 
-// Mendapatkan semua mahasiswa
-const getStudents = async (req, res) => {
-    try {
-        const pool = await poolPromise;
-        const result = await pool.request().query('SELECT * FROM Students');
-        res.json(result.recordset);
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
+// Get all students
+const getAllStudents = async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM mastermahasiswa');
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
-// Menambahkan mahasiswa baru
-const addStudent = async (req, res) => {
-    try {
-        const { name, nim } = req.body;
-        const pool = await poolPromise;
-        const result = await pool.request()
-            .input('Name', sql.NVarChar, name)
-            .input('NIM', sql.NVarChar, nim)
-            .query('INSERT INTO Students (Name, NIM) VALUES (@Name, @NIM)');
-        res.status(201).send('Student added successfully');
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
+// Create a new student
+const createStudent = async (req, res) => {
+  const { name, email } = req.body;
+  try {
+    const result = await pool.query(
+      'INSERT INTO mastermahasiswa (name, email) VALUES ($1, $2) RETURNING *',
+      [name, email]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
 module.exports = {
-    getStudents,
-    addStudent
+  getAllStudents,
+  createStudent,
 };

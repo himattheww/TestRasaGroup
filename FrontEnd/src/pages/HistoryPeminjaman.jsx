@@ -1,16 +1,23 @@
-import React from 'react';
-import { Container, Typography, Box } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Container, Typography } from '@mui/material';
+import api from '../services/api';
 import HistoryTable from '../components/HistoryTable';
 
 const HistoryPeminjaman = () => {
+  const [history, setHistory] = useState([]);
+
+  useEffect(() => {
+    api.get('/history').then((response) => {
+      setHistory(response.data);
+    });
+  }, []);
+
   return (
     <Container>
-      <Box sx={{ mt: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          History Peminjaman
-        </Typography>
-        <HistoryTable />
-      </Box>
+      <Typography variant="h4" gutterBottom>
+        History Peminjaman
+      </Typography>
+      <HistoryTable history={history} />
     </Container>
   );
 };

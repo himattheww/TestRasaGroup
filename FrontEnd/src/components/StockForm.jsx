@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { TextField, Button, Box, Paper } from '@mui/material';
+import { TextField, Button, Box } from '@mui/material';
 
-const StockForm = () => {
+const StockForm = ({ addStock }) => {
   const [stock, setStock] = useState({
-    bookId: '',
+    bookid: '',
     location: '',
     quantity: 0,
   });
@@ -18,42 +18,41 @@ const StockForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Kirim data ke backend
+    addStock(stock);
+    setStock({ bookid: '', location: '', quantity: 0 });
   };
 
   return (
-    <Paper sx={{ p: 3, mb: 4 }}>
-      <Box component="form" onSubmit={handleSubmit}>
-        <TextField
-          label="Book ID"
-          name="bookId"
-          value={stock.bookId}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Location"
-          name="location"
-          value={stock.location}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Quantity"
-          name="quantity"
-          value={stock.quantity}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          type="number"
-        />
-        <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-          Submit
-        </Button>
-      </Box>
-    </Paper>
+    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+      <TextField
+        label="Book ID"
+        name="bookid"
+        value={stock.bookid}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Location"
+        name="location"
+        value={stock.location}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Quantity"
+        name="quantity"
+        value={stock.quantity}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+        type="number"
+      />
+      <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+        Submit
+      </Button>
+    </Box>
   );
 };
 

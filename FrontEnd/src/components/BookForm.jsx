@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { TextField, Button, Box, Paper } from '@mui/material';
+import { TextField, Button, Box } from '@mui/material';
 
-const BookForm = () => {
+const BookForm = ({ addBook }) => {
   const [book, setBook] = useState({
     title: '',
     author: '',
@@ -11,49 +11,48 @@ const BookForm = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setBook((prevBook) => ({
-      ...prevBook, 
-      [name]: value 
+      ...prevBook,
+      [name]: value,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Kirim data ke backend
+    addBook(book);
+    setBook({ title: '', author: '', stock: 0 });
   };
 
   return (
-    <Paper sx={{ p: 3, mb: 4 }}>
-      <Box component="form" onSubmit={handleSubmit}>
-        <TextField
-          label="Title"
-          name="title"
-          value={book.title}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Author"
-          name="author"
-          value={book.author}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Stock"
-          name="stock"
-          value={book.stock}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          type="number"
-        />
-        <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-          Submit
-        </Button>
-      </Box>
-    </Paper>
+    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+      <TextField
+        label="Title"
+        name="title"
+        value={book.title}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Author"
+        name="author"
+        value={book.author}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Stock"
+        name="stock"
+        value={book.stock}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+        type="number"
+      />
+      <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+        Submit
+      </Button>
+    </Box>
   );
 };
 
